@@ -1,0 +1,112 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CSM-7 Class Attendance</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#146747"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="CSM-7"><link rel="icon" href="icon.svg" type="image/svg+xml"><style>
+:root{--green:#146747;--ink:#18251f;--muted:#718078;--bg:#f4f6f2;--line:#e5eae5}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}.app{max-width:1180px;margin:auto;padding:36px 28px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}.brand{display:flex;align-items:center;gap:12px;font-size:17px;font-weight:750}.logo{background:var(--green);color:white;width:38px;height:38px;display:grid;place-items:center;border-radius:12px;font-size:19px}.tag{color:var(--green);font-size:11px;font-weight:750;letter-spacing:.12em}.topdate{color:var(--muted)}h1{font-size:30px;letter-spacing:-.04em;margin:5px 0}p{color:var(--muted);margin:0}.heading{display:flex;justify-content:space-between;align-items:end;margin-bottom:22px}.controls{display:flex;gap:9px}.input,button{font:inherit}.input{height:40px;border:1px solid var(--line);border-radius:9px;background:white;padding:0 11px;color:var(--ink)}.button{border:1px solid var(--line);border-radius:9px;background:white;padding:9px 13px;cursor:pointer;font-weight:650;font-size:12px}.primary{background:var(--green);border-color:var(--green);color:white}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}.card,.panel{background:white;border:1px solid var(--line);border-radius:12px}.card{padding:15px 17px}.label{font-size:12px;color:var(--muted)}.value{font-size:25px;font-weight:750;margin-top:4px}.panel{overflow:hidden}.panelhead{display:flex;align-items:center;justify-content:space-between;padding:15px 17px;border-bottom:1px solid var(--line);gap:12px}.panelhead h2{font-size:15px;margin:0}.panelhead p{font-size:12px}.tools{display:flex;gap:8px;align-items:center}.search{width:190px}table{border-collapse:collapse;width:100%;text-align:left}th{background:#fafbf9;color:#87938b;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:11px 16px}td{padding:10px 16px;border-top:1px solid #eff2ef;font-size:13px}.name{font-weight:650}.roll{font-variant-numeric:tabular-nums;color:#607068}.status{border:0;border-radius:20px;min-width:84px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer}.Present{background:#e7f3eb;color:#26744f}.Absent{background:#fae9e7;color:#b34a42}.Late{background:#fff1dc;color:#a46715}.Unmarked{background:#eff2ef;color:#65716a}.flag{font-size:10px;color:#a66715;margin-left:8px}.tfoot{padding:12px 17px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.modal{position:fixed;inset:0;background:#14231dcc;display:none;place-items:center;padding:18px}.modal.open{display:grid}.dialog{width:min(560px,100%);background:white;border-radius:14px;padding:21px}.dialog h2{margin:0 0 5px;font-size:18px}.dialog p{font-size:13px;margin-bottom:13px}.dialog textarea{width:100%;height:200px;padding:12px;border:1px solid var(--line);border-radius:9px;font:13px/1.55 ui-monospace,monospace;resize:vertical}.dialogfoot{display:flex;justify-content:space-between;align-items:center;margin-top:12px}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#20392e;color:white;border-radius:9px;padding:11px 16px;opacity:0;transition:.2s;pointer-events:none}.toast.show{opacity:1}@media(max-width:700px){.app{padding:22px 12px}.heading{display:block}.controls{margin-top:14px;flex-wrap:wrap}.cards{grid-template-columns:repeat(2,1fr)}.panelhead{align-items:flex-start;flex-direction:column}.tools{width:100%;flex-wrap:wrap}.search{flex:1;min-width:160px}.topdate{font-size:11px}td,th{padding:9px 10px}.name{white-space:normal;min-width:170px}}
+</style></head><body><main class="app"><div class="top"><div class="brand"><div class="logo">✓</div>Class Attendance</div><div style="display:flex;align-items:center;gap:12px"><button class="button primary" id="install" style="display:none">Install app</button><div class="topdate" id="today"></div></div></div><section class="heading"><div><div class="tag">B.TECH · FIRST YEAR</div><h1>CSM-7 Attendance</h1><p id="subline">Student register · 105 students</p></div><div class="controls"><input class="input" id="date" type="date" aria-label="Attendance date"></div></section><section class="cards"><div class="card"><div class="label">Total students</div><div class="value" id="total">105</div></div><div class="card"><div class="label">Present</div><div class="value" id="present">0</div></div><div class="card"><div class="label">Absent</div><div class="value" id="absent">0</div></div><div class="card"><div class="label">Attendance rate</div><div class="value" id="rate">0%</div></div></section><section class="panel"><div class="panelhead"><div><h2>Student register</h2><p>Click a status to cycle: Unmarked → Present → Absent → Late</p></div><div class="tools"><input class="input search" id="search" placeholder="Search name or roll no."><button class="button" id="edit">Edit / add students</button><button class="button" id="export">↓ Export CSV</button><button class="button primary" id="all">Mark all present</button></div></div><div style="overflow:auto;max-height:66vh"><table><thead><tr><th>S.No.</th><th>Student name</th><th>Permanent roll no.</th><th>Attendance</th></tr></thead><tbody id="rows"></tbody></table></div><div class="tfoot"><span id="showing"></span><span>Saved in this browser</span></div></section></main><div class="modal" id="modal"><div class="dialog"><h2>Edit student list</h2><p>One student per line: serial number, student name, permanent roll number. Add or correct the missing/cut-off details here.</p><textarea id="rosterText" spellcheck="false"></textarea><div class="dialogfoot"><button class="button" id="cancel">Cancel</button><div><button class="button" id="reset">Restore image list</button> <button class="button primary" id="saveRoster">Save list</button></div></div></div></div><div class="toast" id="toast"></div><script>
+const seed=`1|AKSHAY KUMAR MOKA|26001265
+2|AKULA SRILATHA|26001266
+3|ALLA JASON|26001267
+4|ANDRAJU SRI CHARAN|26001268
+5|ARAVAPALLI DHARANI|26001269
+6|AREPALLI JASWANTH KUMAR|26001270
+7|BADUGU KUSUMA SIRI|26001271
+8|BANDARU SURESH BABU|26001272
+9|BASAVA CHANDINI|26001273
+10|BEJAWADA HARINI|26001274
+11|BOMMAREDDY BINDUSRI|26001275
+12|BOYALLA SANJANA|26001276
+13|BULA JESLY|26001277
+14|BUSANABOINA MANGARAJU|26001278
+15|CHALLA LAVANYA|26001279
+16|CHEKKA SIRISHA|26001280
+17|CHEVETI AMULYA SHAINEY|26001281
+18|CHIMALADINNE PURA VAISALI|26001282
+19|CHINTA JASWANTH SRI SAI KUMAR|26001283
+20|CHIRRA ESWARA REDDY|26001284
+21|CHITTI LAKSHMI MADHURIMA|26001285
+22|CHUNDI VINAY KUMAR|26001286
+23|DAKARAPU DIAWICK KUMAR|26001287
+24|DARLANKA B G V D SHASHANK|26001288
+25|DHANIKONDA NEERAJA LAKSHMI|26001289
+26|DOMA BHAVYA SRI|26001290
+27|GADESULA SRUTHI|26001291
+28|GAMPA RISHITHA|26001292
+29|GANNINA JAYA SRI|26001293
+30|GARNEPUDI NAGA VENKATA SAI BHA…|26001294
+31|GORIKIPUDI NIKHIL JAYA|26001295
+32|GUNTUPALLI NAGA SRINIDHI|26001296
+33|GURUJULA SIVA LOKESH VIDYADHAR|26001297
+34|GUTLA SHARMILA|26001298
+35|GUTTI DEEPAK|26001299
+36|JAVVADI KAVYASREE|26001300
+37|JETTI RAHUL|26001301
+38|KADIYALA JASWANTH NARAYANA CH…|26001302
+39|KANCHETI JASWANTH UJWAL|26001303
+40|KOLAGANI JYOTHSNA|26001304
+41|KOMARA BAVITHA RATNA JAWALI|26001305
+42|KOMERA DEVA PRIYA|26001306
+43|KOMMANABOYINA SRI CHETHANA|26001307
+44|KONDA SWAMINADH|26001308
+45|KONERU KOTI RAVI VARMA|26001309
+46|KOTTAPALLI LAKSHMI UDAYASRI|26001310
+47|KUNDURTHI PRANAV|26001311
+48|KURUBA SAI KIRAN|26001312
+49|LAKKINENI SOWJANYA|26001313
+50|MADAMANCHI VENKATA KRISHNA CH…|26001314
+51|MAKULA CHARAN|26001315
+52|MANCHI HARSHITHA|26001316
+53|MANDLA HARI KRISHNA|26001317
+54|MANJULA NAGA BHAVANI|26001318
+55|MARTHA DURGA BHAVANI|26001319
+56|MEESALA YESHWANT NAGA SIMHA|26001320
+57|MOHAMMED MEHNAZ|26001321
+58|MOHAMMED MUNWAR BASHA|26001322
+59|MOTAPOTULA MURALI KRISHNA|26001323
+60|MUDDANI BHARATH VENKAT|26001324
+61|MUKKU PUJITHA|26001325
+62|MUTTE MOHITH SAI CHAND|26001326
+63|NAGANABOYINA BABU JWALA CHAN…|26001327
+64|NAGENDA HARSHA SATHWIK|26001328
+65|NALAMATI LAKSHMI PRASANNA|26001329
+66|NALI VENKATA SAI|26001330
+67|NALLAMOTHU PUSPHA LATHA|26001331
+68|NEERUKONDA SURYA|26001332
+69|PADALA KRISHNA MOHAN|26001333
+70|PALIVELA VIJAYA BHASKAR|26001334
+71|PAMULA CIYON|26001335
+72|PARRE DEVI PRASAD|26001336
+73|PASUPULETI VENKATA UMESH CHAN…|26001337
+74|PITTALA ESWAR NAGA VENKATA SAT…|26001338
+75|POTNURI KAMALIKA|26001339
+76|POTUPUREDDI KARTHIK|26001340
+77|PULIMADHI VENKATA VAMSI|26001341
+78|RAMAKURI AMRUTHA|26001342
+79|RAVIPAL LI VENKATA HIMASAGAR|26001343
+80|SAJUPALLI YOGASRI|26001344
+81|SANDAKA SAI DURGA BHAVANI|26001345
+82|SEELAM PARVATHA REDDY|26001346
+83|SHAIK ABDULLAH|26001347
+84|SHAIK HABIBA|26001348
+85|SHAIK KAREEM AHMAD GHORI|26001349
+86|SHAIK KARIMULLA|26001350
+87|SHAIK MOTHADU KOUSHIN KEHARA|26001351
+88|SHAIK SUMAYA BEGUM|26001352
+89|SUNKARA BINDU PRIYA|26001353
+90|SYED NURUDDIN|26001354
+91|TAMATAM PAVANSRI|26001355
+92|THOKA ROHITHA|26001356
+93|THOTA AMRUTHA VARSHINI|26001357
+94|UMMADISETTI BHARGAV SIVA SANKA…|26001358
+95|VAJRAPU AKASH|26001359
+96|VEMU SARIKA|26001360
+97|VEMURI JASHWANTH RAM|26001361
+98|VENTRAPATI JASWANTH|26001362
+99|VINNAKOTA NAGA SAI SASI REKHA|26001363
+100|VOONNA BHAVYA SRI|26001364
+101|VURIBINDI MADHU CHARAN|26001365
+102|YALAMANCHILLI JANAKI RAM|26001366
+103|YELUSURI UDAY CHANDU|26001367`;
+const parse=s=>s.trim().split(/\n/).filter(Boolean).map(line=>{const [sno,name,roll]=line.split('|');return{sno,name,roll}});let students;try{students=JSON.parse(localStorage.getItem('csm7-roster'))||parse(seed)}catch{students=parse(seed)}const date=document.getElementById('date');date.value=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);document.getElementById('today').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});const attKey=()=>`csm7-attendance:${date.value}`;let attendance={};function load(){try{attendance=JSON.parse(localStorage.getItem(attKey())||'{}')}catch{attendance={}}render()}function save(){localStorage.setItem(attKey(),JSON.stringify(attendance));render()}function render(){let q=document.getElementById('search').value.trim().toLowerCase();let list=students.filter(s=>s.name.toLowerCase().includes(q)||s.roll.includes(q)||s.sno===q);document.getElementById('rows').innerHTML=list.map(s=>{let st=attendance[s.roll]||'Unmarked';let flag=s.name.includes('…')?'<span class="flag">name cut off in image</span>':'';return `<tr><td>${s.sno}</td><td class="name">${s.name}${flag}</td><td class="roll">${s.roll}</td><td><button class="status ${st}" data-roll="${s.roll}">${st}</button></td></tr>`}).join('')||'<tr><td colspan="4" style="text-align:center;padding:24px;color:#718078">No matching students</td></tr>';document.querySelectorAll('.status').forEach(b=>b.onclick=()=>{let seq=['Unmarked','Present','Absent','Late'];attendance[b.dataset.roll]=seq[(seq.indexOf(attendance[b.dataset.roll]||'Unmarked')+1)%seq.length];save()});let p=Object.values(attendance).filter(x=>x==='Present').length,a=Object.values(attendance).filter(x=>x==='Absent').length,l=Object.values(attendance).filter(x=>x==='Late').length;document.getElementById('present').textContent=p;document.getElementById('absent').textContent=a;document.getElementById('rate').textContent=Math.round((p+l)/105*100)+'%';document.getElementById('total').textContent=105;document.getElementById('showing').textContent=`Showing ${list.length} of ${students.length} listed students · ${l} late`;document.getElementById('subline').textContent=`Student register · ${students.length} listed / 105 expected`}
+date.onchange=load;document.getElementById('search').oninput=render;document.getElementById('all').onclick=()=>{students.forEach(s=>attendance[s.roll]='Present');save();notify('All listed students marked present')};document.getElementById('export').onclick=()=>{let rows=[['S.No.','Student name','Permanent roll no.','Status','Date','Class'],...students.map(s=>[s.sno,s.name.replace('…',''),s.roll,attendance[s.roll]||'Unmarked',date.value,'CSM-7'])];let csv=rows.map(r=>r.map(x=>'"'+String(x).replaceAll('"','""')+'"').join(',')).join('\r\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=`CSM-7-attendance-${date.value}.csv`;a.click();URL.revokeObjectURL(a.href)};const modal=document.getElementById('modal'),area=document.getElementById('rosterText');document.getElementById('edit').onclick=()=>{area.value=students.map(s=>`${s.sno}|${s.name}|${s.roll}`).join('\n');modal.classList.add('open')};document.getElementById('cancel').onclick=()=>modal.classList.remove('open');document.getElementById('reset').onclick=()=>area.value=seed;document.getElementById('saveRoster').onclick=()=>{let next=parse(area.value);if(!next.length||next.some(s=>!s.sno||!s.name||!s.roll)){notify('Check format: serial|name|roll');return}students=next;localStorage.setItem('csm7-roster',JSON.stringify(students));modal.classList.remove('open');render();notify('Student list saved')};let timer;function notify(msg){let x=document.getElementById('toast');x.textContent=msg;x.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>x.classList.remove('show'),2200)}load();
+let installPrompt;const installBtn=document.getElementById("install");window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;installBtn.style.display="inline-block"});installBtn.onclick=async()=>{if(!installPrompt)return;installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;installBtn.style.display="none"};window.addEventListener("appinstalled",()=>{installBtn.style.display="none";notify("CSM-7 Attendance installed")});if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script></body></html>
+
+
