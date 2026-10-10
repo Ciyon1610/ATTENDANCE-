@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#251b49"><meta name="mobile-web-app-capable" content="yes"><title>Voice Shortcuts</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+:root{color-scheme:dark;--bg:#100f18;--card:#1e1c2b;--ink:#f6f4ff;--muted:#a7a4b8;--purple:#a58bff;--line:#343145}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 12% 0,#30265b 0,transparent 44%),var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{width:min(620px,100%);margin:auto;padding:28px 18px 40px}.top{display:flex;justify-content:space-between;align-items:center}
+.brand{font-size:15px;font-weight:750;display:flex;gap:9px;align-items:center}.logo{width:34px;height:34px;border-radius:12px;background:#a58bff;color:#171322;display:grid;place-items:center;font-size:19px}
+.pill{border:1px solid var(--line);border-radius:99px;color:var(--muted);padding:6px 10px;font-size:11px}.hero{padding:38px 0 20px}.eyebrow{color:#c7baff;letter-spacing:.14em;text-transform:uppercase;font-size:11px;font-weight:750}
+h1{font-size:clamp(30px,8vw,46px);letter-spacing:-.05em;line-height:1.05;margin:9px 0 10px}.hero p,.muted{color:var(--muted)}.card{background:linear-gradient(145deg,#252238,#1b1a27);border:1px solid var(--line);border-radius:20px;padding:18px;margin:14px 0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.button{border:1px solid var(--line);background:#29273a;color:var(--ink);padding:12px 14px;border-radius:12px;font:inherit;font-weight:700;cursor:pointer}
+.primary{background:var(--purple);color:#18132b;border-color:var(--purple)}.mic{width:100%;padding:17px;font-size:16px}.field{width:100%;margin-top:12px;background:#12111b;border:1px solid #454158;border-radius:12px;color:var(--ink);padding:13px;font:inherit}
+.result{margin-top:14px;min-height:32px}.result strong{color:#d9ceff}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.actions a{display:inline-block;text-decoration:none}
+.commands{display:grid;gap:9px}.example{padding:12px;border-radius:12px;background:#171622;color:#e1ddf2;font-size:13px}.notice{font-size:12px;color:var(--muted);margin-top:14px}.warning{color:#f2d28b}
+footer{font-size:11px;color:var(--muted);margin-top:24px}
+</style></head><body><main>
+<div class="top"><div class="brand"><div class="logo">◉</div>Voice Shortcuts</div><div class="pill">Android · installable web app</div></div>
+<section class="hero"><div class="eyebrow">Your voice, your choice</div><h1>Say what you want to open.</h1><p>Use short voice commands to open Instagram or Snapchat. You stay in control of messages and stories.</p></section>
+<section class="card"><button class="button primary mic" id="speak">🎙 Tap and speak</button><input class="field" id="command" aria-label="Voice command" placeholder="Or type: open Instagram">
+<div id="result" class="result" aria-live="polite">Try “open Instagram” or “draft message to name saying hello”.</div></section>
+<section class="card"><strong>Try these commands</strong><div class="commands" style="margin-top:12px">
+<div class="example">“Open Instagram” or “Open Snapchat”</div>
+<div class="example">“Draft message to [name] saying [your message]”</div>
+<div class="example">“Prepare a story mention [username]”</div></div></section>
+<section class="card"><strong>Privacy and control</strong><p class="notice">Tap the microphone each time; this app does not listen in the background. Your browser or Android speech service recognizes speech and may use an online provider. This app does not save audio or command history.</p>
+<p class="notice warning">Messages and story posts are never sent by this shortcut app. Review and complete them in Instagram or Snapchat yourself.</p></section>
+<footer>Opening a link may switch to the installed social app when Android recognizes it; otherwise it opens the website. This app does not read your social messages or contacts.</footer>
+</main><script>
+const command=document.getElementById("command"),result=document.getElementById("result");
+function button(label,href,primary){const a=document.createElement("a");a.href=href;a.target="_blank";a.rel="noopener";const b=document.createElement("button");b.type="button";b.className="button"+(primary?" primary":"");b.textContent=label;a.appendChild(b);return a}
+function showDraft(text,recipient){
+  result.replaceChildren();const p=document.createElement("p");p.textContent="Draft for "+recipient+": ";const strong=document.createElement("strong");strong.textContent=text;p.appendChild(strong);result.appendChild(p);
+  const actions=document.createElement("div");actions.className="actions";
+  const copy=document.createElement("button");copy.type="button";copy.className="button";copy.textContent="Copy draft";
+  copy.onclick=async()=>{try{await navigator.clipboard.writeText(text);copy.textContent="Copied"}catch{command.value=text;command.focus();command.select();copy.textContent="Select and copy the text"}};
+  actions.appendChild(copy);actions.appendChild(button("Open Instagram messages","https://www.instagram.com/direct/inbox/",true));actions.appendChild(button("Open Snapchat","https://www.snapchat.com/",false));result.appendChild(actions);
+  const note=document.createElement("p");note.className="notice";note.textContent="Choose the recipient and send it yourself in the social app.";result.appendChild(note);
+}
+function runCommand(value){
+ const raw=value.trim();if(!raw)return;result.replaceChildren();
+ const open=raw.match(/^(?:open|launch)\s+(instagram|snapchat)(?:\s+(?:messages|chat))?$/i);
+ if(open){const app=open[1].toLowerCase(),isIg=app==="instagram";const dest=isIg?(raw.toLowerCase().includes("messages")?"https://www.instagram.com/direct/inbox/":"https://www.instagram.com/"):"https://www.snapchat.com/";const p=document.createElement("p");p.textContent="Ready to open "+(isIg?"Instagram":"Snapchat")+". Tap below to continue.";result.append(p,button("Open "+(isIg?"Instagram":"Snapchat"),dest,true));return}
+ const draft=raw.match(/^(?:draft|prepare)\s+(?:a\s+)?message\s+to\s+(.+?)\s+saying\s+(.+)$/i);
+ if(draft){showDraft(draft[2].trim(),draft[1].trim());return}
+ const mention=raw.match(/^(?:prepare|draft)\s+(?:a\s+)?story\s+mention\s+@?([a-z0-9_.]+)$/i);
+ if(mention){result.replaceChildren();const p=document.createElement("p");p.textContent="Story mention to add: ";const strong=document.createElement("strong");strong.textContent="@"+mention[1];p.appendChild(strong);result.appendChild(p);const actions=document.createElement("div");actions.className="actions";const copy=document.createElement("button");copy.type="button";copy.className="button";copy.textContent="Copy username";copy.onclick=async()=>{try{await navigator.clipboard.writeText("@"+mention[1]);copy.textContent="Copied"}catch{command.value="@"+mention[1];command.focus();command.select();copy.textContent="Select and copy"}};actions.appendChild(copy);actions.appendChild(button("Open Instagram","https://www.instagram.com/",true));result.appendChild(actions);const note=document.createElement("p");note.className="notice";note.textContent="In Instagram, add the username with the Mention sticker and share it yourself.";result.appendChild(note);return}
+ result.textContent="I couldn't match that command. Try “open Instagram,” “open Snapchat,” or “draft message to [name] saying [text].”";
+}
+document.getElementById("speak").onclick=()=>{
+ const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!Speech){result.textContent="Voice recognition is unavailable in this browser. Type a command instead.";return}
+ const rec=new Speech();rec.lang="en-IN";rec.interimResults=false;rec.maxAlternatives=1;result.textContent="Listening…";
+ rec.onresult=e=>{command.value=e.results[0][0].transcript;runCommand(command.value)};
+ rec.onerror=()=>{result.textContent="Could not hear that. Try again or type the command."};
+ rec.onend=()=>{if(result.textContent==="Listening…")result.textContent="No speech detected. Try again."};
+ try{rec.start()}catch{result.textContent="Microphone is busy. Try again."}
+};
+command.addEventListener("keydown",e=>{if(e.key==="Enter")runCommand(command.value)});
+</script><script>
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script></body></html>

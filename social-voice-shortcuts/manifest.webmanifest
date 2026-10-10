@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "Voice Shortcuts",
+  "short_name": "Voice Shortcuts",
+  "description": "Voice shortcuts for opening social apps and preparing message drafts",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#100f18",
+  "theme_color": "#251b49",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
