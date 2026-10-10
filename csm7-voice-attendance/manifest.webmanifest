@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "CSM-7 Voice Attendance",
+  "short_name": "CSM-7 Voice",
+  "description": "Voice-assisted attendance for B.Tech First Year CSM-7",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f2",
+  "theme_color": "#146747",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
